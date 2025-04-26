@@ -1,95 +1,51 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
+import { useCallback, useMemo, useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useUsersInfinite } from '@/hooks/useUsersInfinite';
+import debounce from 'lodash.debounce';
+import { Button } from '@/components/ui';
+import SearchBar from '@/components/SearchBar';
+import UserCard from '@/components/UserCard';
+
+const qc = new QueryClient();
+
+export default function UsersPage() {
+  const [input, setInput] = useState('');
+  const [term, setTerm] = useState('');
+  const { data, fetchNextPage, hasNextPage, isFetching, status, error } = useUsersInfinite(term);
+  const users = data?.pages.flatMap((page) => page) ?? [];
+
+  const setTermDebounced = useMemo(() => debounce((v: string) => setTerm(v), 2000), []);
+
+  const handleChange = useCallback(
+    (value: string) => {
+      setInput(value || '');
+      setTermDebounced(value || '');
+    },
+    [setTermDebounced]
+  );
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <QueryClientProvider client={qc}>
+      <main className="p-4">
+        <SearchBar value={input} onChange={handleChange} />
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
+        {status === 'pending' && <p>Loading…</p>}
+        {status === 'error' && <p className="text-red-500">{String(error)}</p>}
+
+        <ul style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+          {users.map((user) => (
+            <UserCard key={user.id} user={user} />
+          ))}
+        </ul>
+
+        {hasNextPage && (
+          <Button disabled={isFetching} onClick={() => fetchNextPage()}>
+            {isFetching ? 'Loading…' : 'Load more'}
+          </Button>
+        )}
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    </QueryClientProvider>
   );
 }
