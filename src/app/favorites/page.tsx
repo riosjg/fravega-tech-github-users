@@ -3,7 +3,7 @@
 import { useFavorites } from '@/context/FavoritesContext';
 import { getUser, GitHubUser } from '@/api/github';
 import { useQueries } from '@tanstack/react-query';
-import UserCard from '@/components/UserCard';
+import UserCard from '@/components/userCard';
 import styled from 'styled-components';
 
 const Empty = styled.p`

@@ -3,7 +3,14 @@
 import { Search } from 'lucide-react';
 import styled, { css } from 'styled-components';
 
-const Wrapper = styled.form`
+const FormWrapper = styled.div`
+  ${() => css`
+    display: flex;
+    justify-content: center;
+  `}
+`;
+
+const Form = styled.form`
   ${({ theme }) => css`
     display: flex;
     align-items: center;
@@ -67,20 +74,22 @@ export default function SearchBar({
   onSubmit?: () => void;
 }) {
   return (
-    <Wrapper
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit?.();
-      }}
-    >
-      <Input
-        placeholder="Search for GitHub users"
-        value={value}
-        onChange={(e) => onChange(e.target?.value)}
-      />
-      <IconBtn type="submit">
-        <Search aria-label="search" />
-      </IconBtn>
-    </Wrapper>
+    <FormWrapper>
+      <Form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit?.();
+        }}
+      >
+        <Input
+          placeholder="Search for GitHub users"
+          value={value}
+          onChange={(e) => onChange(e.target?.value)}
+        />
+        <IconBtn type="submit">
+          <Search aria-label="search" />
+        </IconBtn>
+      </Form>
+    </FormWrapper>
   );
 }
