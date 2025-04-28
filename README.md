@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frávega Tech GitHub Users
 
-## Getting Started
+## Installation
 
-First, run the development server:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/riosjg/fravega-tech-github-users
+cd fravega-tech-github-users
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+## Run the app locally
+
+### 1. Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Open your browser at http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Development decisions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Folder structure
 
-## Learn More
+Even though it's a small project, went for an structure that's organized by responsability so it's scalable and readable.
 
-To learn more about Next.js, take a look at the following resources:
+`src/services/` for GitHub REST client code.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`src/hooks/` for custom React hooks.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`src/context/` for the contexts.
 
-## Deploy on Vercel
+`src/components/` for reusable UI components.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Data Fetching
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+As suggested in the requeriments, went for React Query and used the `useInfiniteQuery` utility to handle pagination and infinite scroll.
+
+## Virtualization
+
+After research between `react-virtualized` and `react-window` and analyzing the requeriments for this app, went for react-window along with `react-window-infinite-loader` and `react-virtualized-auto-sizer` given that react-virtualized has many other utilies that weren't needed, hence adding innecessary bundle size.
+
+## Styling
+
+Also as suggested, used styled-components for theming and component-scoped styles. Faced FOUC (flashes of unstyled content) during development , so I set up a StyledComponentsRegistry with useServerInsertedHTML in the layout.
+
+## Favorites Context & Persistence
+
+Decided to implement a shared context to handle everything related the favorites users given that both views needs that data, and allowed me to centralize the logic in one place. Storing said data in a React state triggers a re-render on the components consuming it without having to listen a `storage` event or make regular checks to the local storage with a `setInterval`.
+As a last pro to mention, it was simpler to test all the logic inside a single file, without having to mock the storage on each implementation.
