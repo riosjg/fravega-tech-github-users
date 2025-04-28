@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { FavoritesProvider, useFavorites } from '../FavoritesContext';
+import { FavoritesProvider, useFavorites } from './FavoritesContext';
 
 function TestComponent() {
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
