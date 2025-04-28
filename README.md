@@ -55,3 +55,6 @@ Also as suggested, used styled-components for theming and component-scoped style
 
 Decided to implement a shared context to handle everything related the favorites users given that both views needs that data, and allowed me to centralize the logic in one place. Storing said data in a React state triggers a re-render on the components consuming it without having to listen a `storage` event or make regular checks to the local storage with a `setInterval`.
 As a last pro to mention, it was simpler to test all the logic inside a single file, without having to mock the storage on each implementation.
+
+## See the deployed app here:
+https://fravega-tech-github-users.vercel.app/
