@@ -7,6 +7,6 @@ export const theme: DefaultTheme = {
     dark: '#2B2A29',
     light: '#F5F6FA',
   },
-  spacing: (n = 1) => `${0.25 * n}rem`,
+  spacing: (n = 1) => `${4 * n}px`,
   radius: '4px',
 };

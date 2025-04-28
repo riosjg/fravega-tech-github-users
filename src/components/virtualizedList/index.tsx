@@ -1,31 +1,31 @@
 'use client';
 
-import { FC, useCallback } from 'react';
-import { FixedSizeList as List, ListOnItemsRenderedProps } from 'react-window';
+import { FC } from 'react';
+import { useCallback } from 'react';
+import { FixedSizeList as List } from 'react-window';
+import type { ListOnItemsRenderedProps } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import UserCard from '@/components/userCard';
-import { GitHubUser } from '@/api/github';
+import { GitHubUser } from '@/services/github';
 
 const Container = styled.div`
-  ${({ theme }) => css`
-    width: 100%;
-    height: 100%;
-    flex: 1;
-  `}
+  width: 100%;
+  height: 100%;
+  flex: 1;
 `;
 
-interface Props {
+interface VirtualizedListProps {
   users: GitHubUser[];
   isLoadingNextPage: boolean;
   hasNextPage?: boolean;
   loadNextPage: () => void;
 }
 
-const ROW_HEIGHT = 100; // adjust to match your UserCard height + margin
+const ROW_HEIGHT = 100;
 
-const VirtualizedUserList: FC<Props> = ({
+const VirtualizedUserList: FC<VirtualizedListProps> = ({
   users,
   isLoadingNextPage,
   hasNextPage = false,

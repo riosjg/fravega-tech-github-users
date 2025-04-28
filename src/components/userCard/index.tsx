@@ -1,12 +1,13 @@
 'use client';
 
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 import { Heart } from 'lucide-react';
 import { useFavorites } from '@/context/FavoritesContext';
-import { GitHubUser } from '@/api/github';
+import { GitHubUser } from '@/services/github';
 
 export default function UserCard({ user }: { user: GitHubUser }) {
   const { isFavorite, toggleFavorite } = useFavorites();
+  const theme = useTheme();
   const fav = isFavorite(user.login);
 
   return (
@@ -16,7 +17,7 @@ export default function UserCard({ user }: { user: GitHubUser }) {
         {user.login}
       </Username>
       <FavButton onClick={() => toggleFavorite(user.login)}>
-        <Heart color="purple" fill={fav ? 'purple' : 'white'} />
+        <Heart color={theme.colors.primary} fill={fav ? theme.colors.accent : theme.colors.light} />
       </FavButton>
     </CardWrapper>
   );

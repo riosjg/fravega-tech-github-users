@@ -6,10 +6,33 @@ import { usePathname } from 'next/navigation';
 import styled from 'styled-components';
 import logo from '@/assets/logo.svg';
 
+export default function Header() {
+  const pathname = usePathname();
+
+  const navItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Favorites', href: '/favorites' },
+  ];
+
+  return (
+    <HeaderWrapper>
+      <TopRow>
+        <Image src={logo} alt="Logo" width={100} height={20} />
+        <div style={{ flex: '0 0 auto', width: '2rem' }} />
+        <NavList>
+          {navItems.map((item) => (
+            <NavItem key={item.href} $active={pathname === item.href}>
+              <Link href={item.href}>{item.label}</Link>
+            </NavItem>
+          ))}
+        </NavList>
+      </TopRow>
+    </HeaderWrapper>
+  );
+}
+
 const HeaderWrapper = styled.header`
   background: #fff;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.primary};
-  height: 40px;
 `;
 
 const TopRow = styled.div`
@@ -45,31 +68,3 @@ const NavItem = styled.li<{ $active: boolean }>`
     }
   }
 `;
-
-export default function Header() {
-  const pathname = usePathname();
-
-  const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Favorites', href: '/favorites' },
-  ];
-
-  return (
-    <HeaderWrapper>
-      <TopRow>
-        <Image src={logo} alt="Logo" width={100} height={20} />
-        <div style={{ flex: '0 0 auto', width: '2rem' }} />
-      </TopRow>
-
-      <NavRow>
-        <NavList>
-          {navItems.map((item) => (
-            <NavItem key={item.href} $active={pathname === item.href}>
-              <Link href={item.href}>{item.label}</Link>
-            </NavItem>
-          ))}
-        </NavList>
-      </NavRow>
-    </HeaderWrapper>
-  );
-}

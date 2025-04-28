@@ -1,12 +1,31 @@
 'use client';
-
-import { Search } from 'lucide-react';
 import styled, { css } from 'styled-components';
+
+export default function SearchBar({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <FormWrapper>
+      <Form>
+        <Input
+          placeholder="Search for GitHub users"
+          value={value}
+          onChange={(e) => onChange(e.target?.value)}
+        />
+      </Form>
+    </FormWrapper>
+  );
+}
 
 const FormWrapper = styled.div`
   ${() => css`
     display: flex;
     justify-content: center;
+    width: 100%;
   `}
 `;
 
@@ -40,56 +59,3 @@ const Input = styled.input`
     }
   `}
 `;
-
-const IconBtn = styled.button`
-  ${({ theme }) => css`
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: ${theme.colors.primary};
-    border: none;
-    cursor: pointer;
-
-    svg {
-      color: #fff;
-      width: 18px;
-      height: 18px;
-    }
-
-    &:hover {
-      background: ${theme.colors.primary};
-    }
-  `}
-`;
-
-export default function SearchBar({
-  value,
-  onChange,
-  onSubmit,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  onSubmit?: () => void;
-}) {
-  return (
-    <FormWrapper>
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit?.();
-        }}
-      >
-        <Input
-          placeholder="Search for GitHub users"
-          value={value}
-          onChange={(e) => onChange(e.target?.value)}
-        />
-        <IconBtn type="submit">
-          <Search aria-label="search" />
-        </IconBtn>
-      </Form>
-    </FormWrapper>
-  );
-}

@@ -1,16 +1,11 @@
 'use client';
 
 import { useFavorites } from '@/context/FavoritesContext';
-import { getUser, GitHubUser } from '@/api/github';
+import { getUser, GitHubUser } from '@/services/github';
 import { useQueries } from '@tanstack/react-query';
 import UserCard from '@/components/userCard';
 import styled from 'styled-components';
-
-const Empty = styled.p`
-  text-align: center;
-  padding: ${({ theme }) => theme.spacing(8)};
-  color: ${({ theme }) => theme.colors.dark};
-`;
+import Spinner from '@/components/spinner';
 
 export default function FavoritesPage() {
   const { favorites } = useFavorites();
@@ -24,7 +19,7 @@ export default function FavoritesPage() {
   });
 
   if (results.some((r) => r.isLoading)) {
-    return <Empty>Loading favorite</Empty>;
+    return <Spinner />;
   }
 
   if (favorites.length === 0) {
@@ -34,10 +29,20 @@ export default function FavoritesPage() {
   const users: GitHubUser[] = results.filter((r) => r.isSuccess).map((r) => r.data!);
 
   return (
-    <main style={{ padding: '1rem' }}>
+    <Main>
       {users.map((user) => (
         <UserCard key={user.login} user={user} />
       ))}
-    </main>
+    </Main>
   );
 }
+
+const Main = styled.main`
+  padding: ${({ theme }) => theme.spacing(4)};
+`;
+
+const Empty = styled.p`
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing(8)};
+  color: ${({ theme }) => theme.colors.dark};
+`;

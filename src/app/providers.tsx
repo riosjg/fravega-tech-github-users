@@ -7,16 +7,19 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from '@/app/styles/theme';
 import { GlobalStyle } from './styles/GlobalStyle';
 import { FavoritesProvider } from '@/context/FavoritesContext';
+import StyledComponentsRegistry from '@/lib/registry';
 
 export default function Providers({ children }: { children: ReactNode }) {
   const [client] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <FavoritesProvider>{children}</FavoritesProvider>
-      </ThemeProvider>
+      <StyledComponentsRegistry>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <FavoritesProvider>{children}</FavoritesProvider>
+        </ThemeProvider>
+      </StyledComponentsRegistry>
       {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );

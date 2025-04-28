@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { listUsers, searchUsers } from '@/api/github';
+import { listUsers, searchUsers } from '@/services/github';
 
 export const useUsersInfinite = (term: string) =>
   useInfiniteQuery({
